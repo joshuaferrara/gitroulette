@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var request = require('request');
-require('datejs')
+require('datejs');
 
 if (process.env.HEROKU) {
 	var config = {};
@@ -22,7 +22,7 @@ function randomInt (low, high) {
     return Math.floor(Math.random() * (high - low) + low);
 }
 
-// This function will make a request to the github API, then call a callpack function with the data as an argument.
+// This function will make a request to the github API, then call a callback function with the data as an argument.
 function getRandomRepo(callback) {
 	var randStart = randomInt(0, 10000000);
 	var reqOpts = {
@@ -30,12 +30,12 @@ function getRandomRepo(callback) {
 		headers: {
 			'User-Agent': config.useragent
 		}
-	}
+	};
 	request(reqOpts, function(err, resp, body) {
 		try {
 			var gitData = JSON.parse(body);
 
-			if (gitData.message !== undefined && gitData.message.indexOf('API rate limit exceeded') != -1) {
+			if (gitData.message !== undefined && gitData.message.indexOf('API rate limit exceeded') !== -1) {
 				callback({
 					rateLimited: true
 				});
@@ -56,7 +56,7 @@ function getRandomRepo(callback) {
 						});						
 					} catch(err2) {
 						console.error('Error parsing github API data. ERR 2');
-						conso.error(body);
+						console.error(body);
 						throw(err2);
 					}
 				});
@@ -75,7 +75,7 @@ function rateLimit(callback) {
 		headers: {
 			'User-Agent': config.useragent
 		}
-	}
+	};
 	request(reqOpts, function(err, resp, body) {
 		callback(JSON.parse(body));
 	});
@@ -90,8 +90,8 @@ app.get('/', function (req, res) {
 	getRandomRepo(function(data) {
 		rateLimit(function(rateData) {
 			var outData = data;
-			outData['rateLimit'] = rateData;
-			outData['moreResourcesIn'] = (new Date).clearTime().addSeconds(rateData.resources.core.reset - unix()).toString('mm:ss');
+			outData.rateLimit = rateData;
+			outData.moreResourcesIn = (new Date()).clearTime().addSeconds(rateData.resources.core.reset - unix()).toString('mm:ss');
 			res.render('index', outData);
 		});
 	});
@@ -102,8 +102,8 @@ app.get('/random', function(req, res) {
 	getRandomRepo(function(data) {
 		rateLimit(function(rateData) {
 			var outData = data;
-			outData['rateLimit'] = rateData;
-			outData['moreResourcesIn'] = (new Date).clearTime().addSeconds(rateData.resources.core.reset - unix()).toString('mm:ss');
+			outData.rateLimit = rateData;
+			outData.moreResourcesIn = (new Date()).clearTime().addSeconds(rateData.resources.core.reset - unix()).toString('mm:ss');
 			res.send(outData);
 		});
 	});
