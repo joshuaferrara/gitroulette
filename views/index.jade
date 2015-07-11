@@ -179,6 +179,10 @@ html(lang="en")
 									| Stars
 						a(id="reroll", href="/", class="btn btn-primary", data-loading-text="Gitting a repo...") Let's go again!
 					footer
+						abbr(title="The GitHub API limits requests to 5000/hr and it takes two requests per roll.") Rolls left this hour #{Math.floor(rateLimit.resources.core.remaining / 2)}
+						|  | 
+						| More rolls in #{moreResourcesIn} (m:s)!
+						|  |
 						| Created by 
 						a(href="http://github.com/***REMOVED***", target="_blank") Josh Ferrara
 						|  |

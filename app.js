@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var request = require('request');
+require('datejs')
 
 app.set('views', path.join(__dirname, 'views'));  
 app.set('view engine', 'jade');
@@ -58,16 +59,48 @@ function getRandomRepo(callback) {
 	});
 }
 
+function rateLimit(callback) {
+	var reqOpts = {
+		url: 'https://api.github.com/rate_limit?client_id=***REMOVED***&client_secret=***REMOVED***',
+		headers: {
+			'User-Agent': '***REMOVED***'
+		}
+	}
+	request(reqOpts, function(err, resp, body) {
+		callback(JSON.parse(body));
+	});
+}
+
+function unix() {
+	return Math.floor(Date.now() / 1000);
+}
+
 // This route will display the home page providing an interface to get a random repository.
 app.get('/', function (req, res) {
 	getRandomRepo(function(data) {
-		res.render('index', data);
+		rateLimit(function(rateData) {
+			var outData = data;
+			outData['rateLimit'] = rateData;
+			outData['moreResourcesIn'] = (new Date).clearTime().addSeconds(rateData.resources.core.reset - unix()).toString('mm:ss');
+			res.render('index', outData);
+		});
 	});
 });
 
 // This is going to return a random git repository as well as some metadata encoded in JSON.
 app.get('/random', function(req, res) {
 	getRandomRepo(function(data) {
+		rateLimit(function(rateData) {
+			var outData = data;
+			outData['rateLimit'] = rateData;
+			outData['moreResourcesIn'] = (new Date).clearTime().addSeconds(rateData.resources.core.reset - unix()).toString('mm:ss');
+			res.send(outData);
+		});
+	});
+});
+
+app.get('/rate-limit', function(req, res) {
+	rateLimit(function(data) {
 		res.send(data);
 	});
 });
