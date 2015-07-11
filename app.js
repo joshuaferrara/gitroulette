@@ -5,9 +5,10 @@ var request = require('request');
 require('datejs')
 
 if (process.env.HEROKU) {
-	var config.clientid = process.env.CLIENTID;
-	var config.clientsecret = process.env.CLIENTSECRET;
-	var config.useragent = process.env.USERAGENT;
+	var config = {};
+	config.clientid = process.env.CLIENTID;
+	config.clientsecret = process.env.CLIENTSECRET;
+	config.useragent = process.env.USERAGENT;
 } else {
 	var config = require('./config');
 }
