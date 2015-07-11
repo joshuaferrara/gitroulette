@@ -4,6 +4,15 @@ var path = require('path');
 var request = require('request');
 require('datejs')
 
+if (process.env.HEROKU) {
+	var config.clientid = process.env.CLIENTID;
+	var config.clientsecret = process.env.CLIENTSECRET;
+	var config.useragent = process.env.USERAGENT;
+} else {
+	var config = require('./config');
+}
+
+
 app.set('views', path.join(__dirname, 'views'));  
 app.set('view engine', 'jade');
 
@@ -16,9 +25,9 @@ function randomInt (low, high) {
 function getRandomRepo(callback) {
 	var randStart = randomInt(0, 10000000);
 	var reqOpts = {
-		url: 'https://api.github.com/repositories?client_id=***REMOVED***&client_secret=***REMOVED***&since=' + randStart,
+		url: 'https://api.github.com/repositories?client_id=' + config.clientid + '&client_secret=' + config.clientsecret + '&since=' + randStart,
 		headers: {
-			'User-Agent': '***REMOVED***'
+			'User-Agent': config.useragent
 		}
 	}
 	request(reqOpts, function(err, resp, body) {
@@ -32,9 +41,9 @@ function getRandomRepo(callback) {
 			} else {
 				var randRepo = gitData[randomInt(0, gitData.length)];
 				var oReqOpts = {
-					url: randRepo.url + '?client_id=***REMOVED***&client_secret=***REMOVED***',
+					url: randRepo.url + '?client_id=' + config.clientid + '&client_secret=' + config.clientsecret,
 					headers: {
-						'User-Agent': '***REMOVED***'
+						'User-Agent': config.useragent
 					}
 				};
 				request(oReqOpts, function(err, resp, body) {
@@ -61,9 +70,9 @@ function getRandomRepo(callback) {
 
 function rateLimit(callback) {
 	var reqOpts = {
-		url: 'https://api.github.com/rate_limit?client_id=***REMOVED***&client_secret=***REMOVED***',
+		url: 'https://api.github.com/rate_limit?client_id=' + config.clientid + '&client_secret=' + config.clientsecret,
 		headers: {
-			'User-Agent': '***REMOVED***'
+			'User-Agent': config.useragent
 		}
 	}
 	request(reqOpts, function(err, resp, body) {

@@ -1,0 +1,10 @@
+var config = {};
+
+// This can be set to anything, but GitHub prefers it to be set to your GitHub username or GitHub repo/project name.
+config.useragent = "";
+
+// These can be obtained by creating a new developer application at https://github.com/settings/applications/new
+config.clientid = "";
+config.clientsecret = "";
+
+module.exports = config;
