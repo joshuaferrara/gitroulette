@@ -162,6 +162,7 @@ html(lang="en")
 							strong Uh-oh!
 							|  Looks like we hit GitHub's rate limit...please try again later :(
 					else
+						a(id="reroll", href="/", class="btn btn-primary", data-loading-text="Gitting a repo...") Let's go again!
 						div.github-card.repo-card
 							div.header
 								a(class="avatar", href="#{repoData.owner.url}", target="_blank")
@@ -181,7 +182,7 @@ html(lang="en")
 								span.status
 									strong #{repoData.forks}
 									| Stars
-						a(id="reroll", href="/", class="btn btn-primary", data-loading-text="Gitting a repo...") Let's go again!
+						
 					footer
 						abbr(title="The GitHub API limits requests to 5000/hr and it takes two requests per roll.") Rolls left this hour #{Math.floor(rateLimit.resources.core.remaining / 2)}
 						|  | 
