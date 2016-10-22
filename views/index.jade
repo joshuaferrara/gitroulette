@@ -186,7 +186,7 @@ html(lang="en")
 					footer
 						abbr(title="The GitHub API limits requests to 5000/hr and it takes two requests per roll.") Rolls left this hour #{Math.floor(rateLimit.resources.core.remaining / 2)}
 						|  | 
-						| More rolls in #{moreResourcesIn} (m:s)!
+						| More rolls in abbr(title="minutes:seconds")#{moreResourcesIn}!
 						|  |
 						| Created by 
 						a(href="http://github.com/joshuaferrara", target="_blank") Josh Ferrara
